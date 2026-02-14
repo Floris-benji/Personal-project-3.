@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basketball Shoe Finder</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <style>
+    body {margin:0;font-family:Montserrat,sans-serif;background:#f8fafc;}
+    header {background:#231942;color:#fff;padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    header h1 {margin:0;font-size:2rem;letter-spacing:2px;}
+    nav a {color:#fff;margin-left:2rem;text-decoration:none;font-size:1.1rem;transition:color .2s;}
+    nav a:hover {color:#a0c4ff}
+    .container {padding:2rem 2vw;}
+    .shoe-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;}
+    .shoe-card {background:#fff;border-radius:12px;box-shadow:0 4px 20px #0002;overflow:hidden;transition:transform .2s;}
+    .shoe-card:hover {transform:translateY(-5px) scale(1.03);}
+    .shoe-img {width:100%;aspect-ratio:4/3;object-fit:cover;}
+    .shoe-info {padding:1rem;}
+    .shoe-name {font-size:1.07rem;font-weight:700;margin:0 0 .4rem;}
+    .shoe-brand {color:#5f6474;font-size:0.94rem;}
+    .shoe-card button {background:#a0c4ff;border:none;padding:0.4em 1.2em;margin-top:1em;border-radius:30px;cursor:pointer;color:#222;font-weight:700;transition:box-shadow .1s;}
+    .shoe-card button:hover {box-shadow:0 2px 10px #89acfc88;}
+    .modal-bg {position:fixed;top:0;left:0;right:0;bottom:0;background:#0008;z-index:10;display:none;align-items:center;justify-content:center;}
+    .modal {background:#fff;border-radius:14px;max-width:450px;width:90%;padding:1.7rem 2rem;box-shadow:0 8px 34px #0005;position:relative;}
+    .close-btn {position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.6rem;color:#aaa;cursor:pointer;}
+    .modal h2 {margin-top:0;font-size:1.27rem;}
+    .specs {margin:1em 0 0 0;padding:0;list-style:none;font-size:0.97rem;color:#404454;}
+    .specs li {margin-bottom:.5em;}
+    .colorway-dot {display:inline-block;width:17px;height:17px;border-radius:50%;border:2px #fff solid;box-shadow:0 0 3px #0002;margin-right:6px;vertical-align:middle;}
+    .seller-links a {display:inline-block;margin-top:.7em;text-decoration:none;background:#e6e6fa;padding:8px 16px;margin-right:6px;border-radius:6px;color:#3b3b64;font-weight:600;}
+    .seller-links a:hover {background:#a0c4ff;color:#231942}
+    .quiz {background:#fff;margin:3.1rem auto 0 auto;max-width:500px;padding:2rem 2.3rem 1rem 2.3rem;border-radius:12px;box-shadow:0 2px 28px #b197f680;}
+    .quiz h2 {margin-top:0;}
+    .quiz-q {margin:1.3em 0 .5em;}
+    .quiz input[type=radio] {margin-right:6px;}
+    .quiz-btn {background:#7209b7;color:#fff;padding:10px 26px;border:none;border-radius:23px;font-weight:700;font-size:1rem;cursor:pointer;float:right;margin-top:0.8em;transition:background .2s;}
+    .quiz-btn:hover {background:#560bad;}
+    .result {margin:2em 0 0 0;font-size:1.13rem;}
+    @media (max-width:600px) {
+      header{padding:1rem;}
+      .container{padding:1rem;}
+      .shoe-grid{grid-template-columns:1fr;}
+      .quiz{padding:1.1rem;}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Baskicks Finder</h1>
+  <nav>
+    <a href="#shoes">Shoes</a>
+    <a href="#quiz">Quiz</a>
+  </nav>
+</header>
+
+<div class="container" id="shoes">
+  <h2 style="margin-bottom:0.7em;color:#231942;">🔥 Popular Basketball Shoes</h2>
+  <div class="shoe-grid" id="shoeGrid">
+    <!-- JS will fill this -->
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <h2 id="modalShoeName"></h2>
+    <img id="modalImg" style="width:100%;margin-bottom:.7em;border-radius:8px" src="" alt="shoe"/>
+    <ul class="specs" id="modalSpecs"></ul>
+    <div class="seller-links" id="modalLinks"></div>
+  </div>
+</div>
+
+<div id="quiz" class="quiz">
+  <h2>🏀 Find Your Perfect Basketball Shoe</h2>
+  <form id="quizForm">
+    <div class="quiz-q">Your position:<br>
+      <label><input type="radio" name="position" value="Guard"> Guard</label> &nbsp;
+      <label><input type="radio" name="position" value="Forward"> Forward</label> &nbsp;
+      <label><input type="radio" name="position" value="Center"> Center</label>
+    </div>
+    <div class="quiz-q">Foot width:<br>
+      <label><input type="radio" name="width" value="Narrow"> Narrow</label>
+      <label><input type="radio" name="width" value="Regular"> Regular</label>
+      <label><input type="radio" name="width" value="Wide"> Wide</label>
+    </div>
+    <div class="quiz-q">Shoe length:<br>
+      <label><input type="radio" name="length" value="Short"> Under 27cm</label>
+      <label><input type="radio" name="length" value="Medium"> 27-29cm</label>
+      <label><input type="radio" name="length" value="Long"> 29cm+</label>
+    </div>
+    <div class="quiz-q">Player:<br>
+      <label><input type="radio" name="gender" value="Male"> Guy</label>
+      <label><input type="radio" name="gender" value="Female"> Girl</label>
+      <label><input type="radio" name="gender" value="Other"> Other</label>
+    </div>
+    <div class="quiz-q">Key attribute:<br>
+      <label><input type="radio" name="attribute" value="Lightweight"> Lightweight</label>
+      <label><input type="radio" name="attribute" value="Cushion"> Cushion</label>
+      <label><input type="radio" name="attribute" value="Support"> Support</label>
+    </div>
+    <button type="submit" class="quiz-btn">Find my shoe</button>
+  </form>
+  <div class="result" id="quizResult"></div>
+</div>
+
+<script>
+const shoes = [
+  {
+    name:'Nike Kyrie 7',
+    brand:'Nike',
+    img:'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,nike/nxk2htng6l6xrrzkgm4n/kyrie-7-basketball-shoe-jcDGw0.png',
+    specs:[
+      "Weight: 370g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#222'></span>Black <span class='colorway-dot' style='background:#222;background:linear-gradient(143deg,#ffe066 70%,#111 100%)'></span>Yellow/Black, <span class='colorway-dot' style='background:#f15d51'></span>Red",
+      "Materials: Mesh upper, molded TPU support",
+      "Creator: Kyrie Irving",
+      "Length: Regular",
+      "Court: Indoor/Outdoor"
+    ],
+    links:[
+      {url:"https://www.nike.com/t/kyrie-7-basketball-shoe-jcDGw0",name:"Nike.com"},
+      {url:"https://stockx.com/nike-kyrie-7",name:"StockX"}
+    ],
+    tags:{position:'Guard',width:'Narrow',length:'Medium',gender:'Male',attribute:'Lightweight'}
+  },
+  {
+    name:'Adidas Harden Vol. 6',
+    brand:'Adidas',
+    img:'https://assets.adidas.com/images/w_600,f_auto,q_auto/20e7af7f2a294d53b663ae4d00a0036c_9366/Harden_Vol._6_Shoes_Green_GY6467_01_standard.jpg',
+    specs:[
+      "Weight: 420g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#12b886'></span>Lime Green, <span class='colorway-dot' style='background:#1c1e22'></span>Black, <span class='colorway-dot' style='background:#ca2c92'></span>Pink",
+      "Materials: Textile upper, rubber outsole",
+      "Creator: James Harden",
+      "Length: Long",
+      "Court: Indoor"
+    ],
+    links:[
+      {url:"https://www.adidas.com/us/harden-vol.-6-shoes/GY6467.html",name:"Adidas"},
+      {url:"https://stockx.com/adidas-harden-vol-6",name:"StockX"}
+    ],
+    tags:{position:'Guard',width:'Regular',length:'Long',gender:'Male',attribute:'Support'}
+  },
+  {
+    name:'Puma MB.01',
+    brand:'Puma',
+    img:'https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa/global/376941/10/sv01/fnd/PNA/fmt/png',
+    specs:[
+      "Weight: 390g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#ffbe0b'></span>Yellow, <span class='colorway-dot' style='background:#1976d2'></span>Blue/Purple, <span class='colorway-dot' style='background:#eee'></span>White",
+      "Materials: Engineer knit upper, ProFoam+ midsole",
+      "Creator: LaMelo Ball",
+      "Length: Medium",
+      "Court: Indoor"
+    ],
+    links:[
+      {url:"https://us.puma.com/us/en/pd/lamelo-ball-mb.01-basketball-shoes/376941?ibx_source=shoes&ibx_medium=lameloball",name:"Puma"},
+      {url:"https://goat.com/sneakers/mb-01",name:"GOAT"}
+    ],
+    tags:{position:'Guard',width:'Regular',length:'Medium',gender:'Male',attribute:'Cushion'}
+  },
+  {
+    name:'Under Armour Curry Flow 9',
+    brand:'Under Armour',
+    img:'https://underarmour.scene7.com/is/image/Underarmour/3024274-405_DEFAULT?fmt=png-alpha',
+    specs:[
+      "Weight: 330g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#1976d2'></span>Royal Blue, <span class='colorway-dot' style='background:#c1121f'></span>Red, <span class='colorway-dot' style='background:#fff'></span>White",
+      "Materials: Warp upper, Flow foam outsole",
+      "Creator: Stephen Curry",
+      "Length: Short",
+      "Court: Indoor"
+    ],
+    links:[
+      {url:"https://www.underarmour.com/en-us/p/curry_flow_9",name:"UnderArmour"},
+      {url:"https://stockx.com/under-armour-curry-9",name:"StockX"}
+    ],
+    tags:{position:'Guard',width:'Narrow',length:'Short',gender:'Male',attribute:'Lightweight'}
+  },
+  {
+    name:'Nike Air Zoom G.T. Jump',
+    brand:'Nike',
+    img:'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,q_auto:eco/ef6b8c20-ac00-42ea-bf02-62baa4caeb97/air-zoom-gt-jump-basketball-shoes-Lp6rHP.png',
+    specs:[
+      "Weight: 470g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#fff'></span>White, <span class='colorway-dot' style='background:#ff595e'></span>Crimson, <span class='colorway-dot' style='background:#65318b'></span>Purple",
+      "Materials: Leno-weave upper, double Zoom Air unit",
+      "Creator: Nike Sports Lab",
+      "Length: Long",
+      "Court: Indoor"
+    ],
+    links:[
+      {url:"https://www.nike.com/t/air-zoom-gt-jump-basketball-shoes",name:"Nike.com"},
+      {url:"https://goat.com/sneakers/air-zoom-gt-jump",name:"GOAT"}
+    ],
+    tags:{position:'Center',width:'Wide',length:'Long',gender:'Male',attribute:'Cushion'}
+  },
+  {
+    name:'Li-Ning Way of Wade 10',
+    brand:'Li-Ning',
+    img:'https://www.li-ning.com/media/catalog/product/cache/93e213774984b2cf52593cf9b4201aed/d/w/dw133020152653_r-2.png',
+    specs:[
+      "Weight: 440g (US9)",
+      "Colorways: <span class='colorway-dot' style='background:#2a9d8f'></span>Teal, <span class='colorway-dot' style='background:#264653'></span>Dark Blue, <span class='colorway-dot' style='background:#ffb4a2'></span>Pink",
+      "Materials: Textile upper, carbon fiber midfoot",
+      "Creator: Dwyane Wade",
+      "Length: Medium",
+      "Court: Indoor/Outdoor"
+    ],
+    links:[
+      {url:"https://en.li-ning.com/way-of-wade-10",name:"Li-Ning"},
+      {url:"https://goat.com/sneakers/way-of-wade-10",name:"GOAT"}
+    ],
+    tags:{position:'Forward',width:'Wide',length:'Medium',gender:'Female',attribute:'Support'}
+  },
+];
+
+const shoeGrid=document.getElementById('shoeGrid');
+function createCard(shoe,idx){
+  return `<div class="shoe-card">
+    <img src="${shoe.img}" alt="${shoe.name}" class="shoe-img">
+    <div class="shoe-info">
+      <div class="shoe-name">${shoe.name}</div>
+      <div class="shoe-brand">${shoe.brand}</div>
+      <button onclick="showShoe(${idx})">Details</button>
+    </div>
+  </div>`;
+}
+shoeGrid.innerHTML = shoes.map(createCard).join('');
+
+window.showShoe = function(idx){
+  const s=shoes[idx];
+  document.getElementById('modalShoeName').textContent = s.name+" ("+s.brand+")";
+  document.getElementById('modalImg').src = s.img;
+  document.getElementById('modalSpecs').innerHTML = s.specs.map(x=>"<li>"+x+"</li>").join('');
+  document.getElementById('modalLinks').innerHTML = s.links.map(l=>`<a href="${l.url}" target="_blank">${l.name}</a>`).join('');
+  document.getElementById('modalBg').style.display='flex';
+};
+window.closeModal = function(){
+  document.getElementById('modalBg').style.display='none';
+};
+document.getElementById('modalBg').onclick = function(e){
+  if(e.target===this) closeModal();
+};
+
+document.getElementById('quizForm').onsubmit = function(e){
+  e.preventDefault();
+  const data=Array.from(new FormData(this)).reduce((a,[k,v])=>{a[k]=v;return a;},{});
+  // Quiz matching logic: Find first matching (expandable; demo version)
+  let fit=shoes.find(s=>{
+    let t=s.tags||{}; let match=0;
+    if(data.position && t.position==data.position) match++;
+    if(data.width && t.width==data.width) match++;
+    if(data.length && t.length==data.length) match++;
+    if(data.gender && t.gender==data.gender) match++;
+    if(data.attribute && t.attribute==data.attribute) match++;
+    return match>=3;
+  }) || shoes[Math.floor(Math.random()*shoes.length)];
+  document.getElementById('quizResult').innerHTML =
+    `Your best match: <b>${fit.name}</b> by ${fit.brand}<br>
+    <img src="${fit.img}" style="width:80%;margin:10px 0;border-radius:10px">
+    <br><button class="quiz-btn" style="float:none" onclick="showShoe(${shoes.indexOf(fit)})">See Details</button>`;
+};
+
+// Smooth scroll for nav
+document.querySelectorAll('nav a').forEach(a=>{
+  a.onclick=function(e){
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+  }
+});
+</script>
+</body>
+</html>
